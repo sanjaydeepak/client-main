@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        form {
+            background: white;
+            padding: 40px;
+            border-radius: 5px;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            width: 100%;
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background: #e2e2e2;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <form id="registerform">
+        <centre>ENTER YOUR CREDENTIALS</centre>
+        <input type="text" id="username" placeholder="Enter Name" required>
+
+        <input type="text" id="email" placeholder="Enter Email" required>
+        
+        <input type="text" id="password" placeholder="Enter Password" required>
+       
+        <input type="text" id="phonenumber" placeholder="Enter Number" required>
+        
+
+        <button type="submit">Submit</button>
+    </form>
+    <div class="result" id="result" style="display: none;"></div>
+
+    <script>
+        const form = document.getElementById('registerform');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting
+
+            // Gather form data
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phonenumber = document.getElementById('phonenumber').value;
+            
+
+            console.log('username:', username);
+            console.log('email:', email);
+            console.log('password:', password);
+            console.log('phonenumber:', phonenumber);
+            
+
+
+            // Prepare the data object
+            const data = {
+                username: username,
+                email: email,
+                password: password,
+                phonenumber: phonenumber,
+                
+            };
+
+            // Send POST request to the backend
+            try {
+                const response = await axios.post('http://localhost:8400/api/auth/register', {
+                    username: username,
+                    email: email,
+                    password: password,
+                    phonenumber: phonenumber,
+                });
+                console.log(response);
+                const data = response.data.message;
+                console.log(data);
+                
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = ` 
+                    <h4>Username: ${data}</h4>
+                  
+                `;
+
+            } catch (error) {
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<p>Error: ${error.response ? error.response.data.error : error.message}</p>`;
+                console.log(response);
+            }
+        });
+    </script>
+</body>
+</html>
